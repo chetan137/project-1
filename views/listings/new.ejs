@@ -1,0 +1,191 @@
+<% layout("/layouts/boilerplate") %>
+
+    <body>
+        <div class="row mt-3">
+            <div class="col-8 offset-2">
+                <br><br>
+                <h3 class="mb-3">ADD NEW LISTINGS!!</h3>
+                <form class="needs-validation" novalidate method="POST" action="/listings"
+                    enctype="multipart/form-data">
+
+                    <!-- Title -->
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input required class="form-control" type="text" name="listing[title]"
+                            placeholder="Listing Title">
+                        <div class="invalid-feedback">Please provide a valid title.</div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea required class="form-control" name="listing[description]"
+                            placeholder="Listing description" rows="5"></textarea>
+                        <div class="invalid-feedback">Please provide a valid description.</div>
+                    </div>
+
+                    <!-- Key Features Array -->
+                    <div class="mb-3">
+                        <label for="keyFeatures" class="form-label">Key Features</label>
+                        <div id="keyFeaturesWrapper">
+                            <div class="input-group mb-2">
+                                <input type="text" name="listing[keyFeatures][]" class="form-control"
+                                    placeholder="Key Feature">
+                                <button type="button" class="btn btn-success" onclick="addFeature()">+</button>
+                            </div>
+                        </div>
+                        <div class="invalid-feedback">Please provide key features.</div>
+                    </div>
+
+                    <!-- Amenities Array -->
+                    <div class="mb-3">
+                        <label for="amenities" class="form-label">Amenities</label>
+                        <div id="amenitiesWrapper">
+                            <div class="input-group mb-2">
+                                <input type="text" name="listing[amenities][]" class="form-control"
+                                    placeholder="Amenity">
+                                <button type="button" class="btn btn-success" onclick="addAmenity()">+</button>
+                            </div>
+                        </div>
+                        <div class="invalid-feedback">Please provide amenities.</div>
+                    </div>
+
+                    <!-- House Rules -->
+                    <div class="mb-3">
+                        <label for="houseRules" class="form-label">House Rules</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="listing[houseRules][children]"
+                                id="children" value="true">
+                            <label class="form-check-label" for="children">Allow Children</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="listing[houseRules][infants]"
+                                id="infants" value="true">
+                            <label class="form-check-label" for="infants">Allow Infants</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="listing[houseRules][pets]" id="pets"
+                                value="true">
+                            <label class="form-check-label" for="pets">Allow Pets</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="listing[houseRules][parties]"
+                                id="parties" value="true">
+                            <label class="form-check-label" for="parties">Allow Parties</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="listing[houseRules][smoking]"
+                                id="smoking" value="true">
+                            <label class="form-check-label" for="smoking">Allow Smoking</label>
+                        </div>
+                        <!-- Additional Rules -->
+                        <div class="mb-3 mt-3">
+                            <label for="additionalRules" class="form-label">Additional Rules</label>
+                            <textarea class="form-control" name="listing[houseRules][additionalRules]"
+                                placeholder="Additional Rules"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Location (Mapbox) -->
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location (Map)</label>
+                        <input required class="form-control" type="text" name="listing[location]" id="location"
+                            placeholder="Enter address for the map">
+                        <div id="map" style="height: 300px;"></div>
+                        <div class="invalid-feedback">Please provide a valid location.</div>
+                    </div>
+
+                    <!-- Calendar for Availability -->
+                    <div class="mb-3">
+                        <label for="availableDates" class="form-label">Available Dates</label>
+                        <input required class="form-control" type="text" name="listing[availableDates]" id="availableDates"
+                            placeholder="Select available dates">
+                        <div class="invalid-feedback">Please provide available dates.</div>
+                    </div>
+
+                    <!-- Images Upload (add one by one) -->
+                    <div class="mb-3">
+                        <label for="images" class="form-label">Upload Images</label>
+                        <div id="imageUploadWrapper">
+                            <div class="input-group mb-2">
+                                <input type="file" required class="form-control" name="listing[images]"
+                                    accept="image/*">
+                                <button type="button" class="btn btn-success" onclick="addImage()">+</button>
+                            </div>
+                        </div>
+                        <div class="invalid-feedback">Please upload at least one image.</div>
+                    </div>
+
+                    <!-- Video Upload -->
+                    <div class="mb-3">
+                        <label for="video" class="form-label">Upload Video</label>
+                        <input type="file" class="form-control" name="listing[video]" accept="video/*">
+                    </div>
+
+                    <!-- Price -->
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price per Night</label>
+                        <input required class="form-control" type="number" name="listing[price]"
+                            placeholder="Enter price per night">
+                        <div class="invalid-feedback">Please provide a valid price.</div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button class="btn btn-dark add-btn mt-3">ADD</button>
+                    <hr>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            // Function to dynamically add key features input
+            function addFeature() {
+                let wrapper = document.getElementById('keyFeaturesWrapper');
+                let inputGroup = document.createElement('div');
+                inputGroup.classList.add('input-group', 'mb-2');
+                inputGroup.innerHTML = `<input type="text" name="listing[keyFeatures][]" class="form-control" placeholder="Key Feature">
+                                    <button type="button" class="btn btn-danger" onclick="removeField(this)">-</button>`;
+                wrapper.appendChild(inputGroup);
+            }
+
+            // Function to dynamically add amenities input
+            function addAmenity() {
+                let wrapper = document.getElementById('amenitiesWrapper');
+                let inputGroup = document.createElement('div');
+                inputGroup.classList.add('input-group', 'mb-2');
+                inputGroup.innerHTML = `<input type="text" name="listing[amenities][]" class="form-control" placeholder="Amenity">
+                                    <button type="button" class="btn btn-danger" onclick="removeField(this)">-</button>`;
+                wrapper.appendChild(inputGroup);
+            }
+
+            // Function to dynamically add images input
+            function addImage() {
+                let wrapper = document.getElementById('imageUploadWrapper');
+                let inputGroup = document.createElement('div');
+                inputGroup.classList.add('input-group', 'mb-2');
+                inputGroup.innerHTML = `<input type="file" name="listing[images]" class="form-control" accept="image/*">
+                                    <button type="button" class="btn btn-danger" onclick="removeField(this)">-</button>`;
+                wrapper.appendChild(inputGroup);
+            }
+
+            // Remove dynamic fields
+            function removeField(button) {
+                button.parentElement.remove();
+            }
+
+            // Initialize date picker
+                // Calendar (Date Picker) setup for available dates
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const dateInput = document.getElementById('availableDates');
+                        flatpickr(dateInput, {
+                            mode: 'range', // Allows selecting a range of dates
+                            dateFormat: 'Y-m-d',
+                            minDate: 'today'
+                        });
+                    });
+                </script>
+
+    <!-- Flatpickr for the date picker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    </body>

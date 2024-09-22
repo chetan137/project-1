@@ -1,0 +1,355 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* nav bar */
+
+
+.navbar {
+    height: 5rem;
+
+}
+
+.card-text p {
+    font-weight: 400;
+}
+
+
+
+
+.nav-link {
+    color: black !important;
+}
+
+/* footer css */
+
+.f-info-link a {
+    text-decoration: none;
+    color: black;
+}
+
+.f-info-link a:hover {
+    text-decoration: underline;
+}
+
+
+.f-info-link,
+.f-info-social,
+.f-info-brand {
+    width: 100%;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.f-info-social i {
+    font-size: 1.2rem;
+    margin-right: 1rem;
+}
+
+.f-info {
+    text-align: center;
+    height: 8rem;
+    background-color: aliceblue;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-evenly;
+}
+
+.card-listing {
+    border: none !important;
+    margin-bottom: 2rem;
+
+}
+
+.card-image-top {
+    border-radius: 1rem !important;
+    width: 100%;
+    object-fit: cover !important;
+    /* transition: .25s ease-out */
+}
+
+/* .card-image-top:hover {
+    transform: scale(1.1);
+} */
+
+.card body {
+    padding: 0%;
+}
+
+.listing-link {
+    text-decoration: none !important;
+}
+
+/* card style */
+
+/* .card img {
+    border-radius: 5%;
+} */
+
+.card-img-overlay {
+    opacity: 0;
+
+    transition: .25s ease-out
+}
+
+.card-img-overlay:hover {
+
+
+    opacity: 0.1;
+    background-color: aliceblue;
+    box-shadow: 10px 2px 25px 10px rgb(6, 5, 5);
+}
+
+
+
+
+.container {
+    flex: 1;
+}
+
+/* /add btn */
+.add-btn {
+    background-color: rgb(250, 6, 6) !important;
+    border: none !important;
+}
+
+/* show */
+.show-img {
+    height: 20vh !important;
+}
+
+
+/* edit
+ */
+
+.edit-btn {
+    display: flex;
+
+}
+
+.show-card {
+
+    padding-left: 0;
+    padding-right: 0;
+
+}
+
+.card {
+    border-radius: 10% !important;
+}
+
+.show-img1 {
+    border-radius: 10% !important;
+}
+
+
+/* map */
+
+#map {
+    height: 400px;
+    width: 100%;
+
+}
+
+@media (max-width: 600px) {
+    #map {
+        height: 200px;
+        width: 100%;
+        padding: 2rem;
+
+    }
+
+    .show-card {
+        width: fit-content;
+
+    }
+}
+
+@media (min-width: 600px) {
+    #map {
+        height: 400px;
+
+
+        padding: 2rem;
+        margin-left: 0.8rem;
+    }
+
+    .show-card {
+        width: fit-content;
+
+    }
+}
+
+/* ----------------------------- */
+
+.animation {
+    position: relative;
+    top: -15rem;
+    left: -5.5rem;
+    color: rgb(19, 113, 253);
+
+}
+
+.para {
+    font-size: 55px;
+    font-weight: 700;
+    font-size: clamp(24px, 4vw, 55px);
+
+}
+
+@media screen and (min-width:1024px) {}
+
+@media screen and (min-width:768px)and (max-width:1024px) {}
+
+
+
+.a1 {
+    position: absolute;
+    left: 345px;
+    list-style: none;
+    top: 5rem;
+    font-size: 55px;
+    font-weight: 700;
+
+    animation: typing 2s steps(12) infinite, blink 10s infinite;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid;
+    padding: 0px 4px 0px 4px;
+    box-shadow: 1px 2px 8px rgb(41, 40, 40);
+    border-radius: 15px;
+
+}
+
+.a2 {
+    position: absolute;
+    left: 345px;
+    list-style: none;
+    top: 5rem;
+    font-size: 55px;
+    font-weight: 700;
+
+    animation: typing1 2s steps(10) infinite, blink2 10s infinite;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid;
+    padding: 0px 4px 0px 4px;
+    box-shadow: 1px 2px 8px rgb(41, 40, 40);
+    border-radius: 15px;
+
+}
+
+.a3 {
+    position: absolute;
+    left: 345px;
+    list-style: none;
+    top: 5rem;
+    font-size: 55px;
+    font-weight: 700;
+    border-radius: 15px;
+    padding: 0px 4px 0px 4px;
+    box-shadow: 1px 2px 8px rgb(41, 40, 40);
+
+
+    animation: typing 2s steps(11) infinite, blink3 10s infinite;
+    transition: 3s;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid;
+
+}
+
+
+@media(min-width:767px) {
+    .a1 .a2 .a3 {
+        font-size: 24px;
+    }
+}
+
+@keyframes typing {
+    0% {
+        width: 0;
+    }
+
+    100% {
+        width: 35%;
+    }
+
+
+}
+
+@keyframes typing1 {
+    0% {
+        width: 0;
+    }
+
+    100% {
+        width: 35%;
+    }
+
+
+}
+
+
+
+
+@keyframes blink {
+
+    0%,
+    19% {
+        visibility: visible;
+    }
+
+    20%,
+    100% {
+        visibility: hidden;
+
+    }
+}
+
+@keyframes blink2 {
+
+    0%,
+    40% {
+        visibility: hidden;
+    }
+
+
+    41%,
+    60% {
+        visibility: visible;
+
+    }
+
+    62%,
+    100% {
+        visibility: hidden;
+    }
+}
+
+@keyframes blink3 {
+
+    0%,
+    80% {
+        visibility: hidden;
+    }
+
+    81%,
+    100% {
+        visibility: visible;
+    }
+
+
+}

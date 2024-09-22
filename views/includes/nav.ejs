@@ -1,0 +1,175 @@
+<style>
+    /* Styles for search container */
+    .search-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-top: 9px;
+    }
+
+    /* Styles for search input */
+    .search-input {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 200px;
+        transition: width 0.3s ease-in-out;
+    }
+
+    /* Styles for search button */
+    .search-button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        margin-left: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    /* Responsive styles */
+    @media screen and (max-width: 600px) {
+        .search-container {
+            flex-direction: column;
+        }
+
+        .search-input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+
+    /* ----------------- */
+    /* Basic styles */
+    .toggle-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    .toggle-icon {
+        display: block;
+        width: 50px;
+        margin-top: 10px;
+        height: 50px;
+        background: url('https://cdn.jsdelivr.net/gh/vgete/vgete.github.io/hamburgers-master/dist/hamburgers.svg');
+    }
+
+    /* Responsive styles */
+    @media screen and (min-width: 768px) {
+        .toggle-button {
+            display: none;
+        }
+    }
+</style>
+
+<nav class="navbar navbar-expand-md bg-body-tertiary border-bottom sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/listings"></a>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <div class="navbar-nav">
+
+
+                <li class="nav-item">
+                    <!-- <img src="/video/kajwa-high-resolution-logo-transparent.png" style="font-size:1rem;" alt=""> -->
+
+                    <a class="nav-link" href="/listings">Home</a>
+                </li>
+            </div>
+
+
+            <!-- <div class="search-container ms-auto">
+                <input type="text" placeholder="Search..." name="text" class="search-input">
+                <button class="search-button">Search</button>
+
+            </div> -->
+
+
+            <div class="navbar-nav ms-auto">
+
+
+                <!-- <li class=" pointer-events-auto flex content-evenly justify-items-end">
+                    <a href="/listings/cart"><i class="fa-solid fa-cart-shopping"></i></a>
+                </li> -->
+
+                <!-- <li class="nav-item">
+                        <a class="nav-link" href="/listings/new">Add New Listings</a>
+                    </li> -->
+
+
+
+                <% if(!currUser){ %>
+
+
+                    <a class="nav-link" href="/signup"><b>Sign Up</b></a>
+
+                    <a class="nav-link" href="/login"><b>Log in</b></a>
+
+                    <% } %>
+                        <%if(currUser){%>
+
+
+                            <div class="mt-2">
+                                <li class=" pointer-events-auto flex justify-items-end">
+                                    <a href="/cart"><i class="fa-solid fa-cart-shopping"></i></a>
+                                </li>
+                            </div>
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <form action="/orders" method="GET">
+                                <button class="btn  btn-black" type="submit">MY Orders</button>
+                            </form>
+
+
+                            <a class="nav-link" href="/logout"><b>Log out</b></a>
+
+
+
+                            <%if (currUser.role==='admin' && currUser.role!=='user' ) { %>
+
+                                <a href="/listings/new" class="btn btn-primary">Add Listing</a>
+                                &nbsp;&nbsp;
+
+                                <li><a href="/add-subadmin" class="btn btn-primary">Add SubAdmin</a></li>
+
+                                &nbsp;&nbsp;
+                                <li><a href="/" class="btn btn-secondary">User Management</a></li>
+
+
+                                <% } else if (currUser.role !=='user' ) { %>
+                                    <a href="/listings/new" class="btn btn-primary">Add Listing</a>
+                                    <% } %>
+
+
+                                        <% } %>
+
+
+
+
+            </div>
+
+
+
+        </div>
+        <div><button class="toggle-button" aria-label="Toggle navigation">
+                <span class="toggle-icon"><i style="font-size: 2.2rem;" class="fa-solid fa-sliders"></i></span>
+            </button></div>
+
+        <script>document.addEventListener("DOMContentLoaded", function () {
+                const toggleButton = document.querySelector(".toggle-button");
+                const toggleIcon = document.querySelector(".toggle-icon");
+
+                toggleButton.addEventListener("click", function () {
+                    toggleIcon.classList.toggle("active");
+                });
+            });
+        </script>
+    </div>
+</nav>
