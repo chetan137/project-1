@@ -8,3 +8,36 @@
 2024-09-21T19:50:51.298Z [ERROR]: Error creating listing
 2024-09-22T11:12:39.270Z [INFO]: Creating new listing
 2024-09-22T11:12:39.284Z [ERROR]: Error creating listing
+2024-09-23T04:31:59.858Z [INFO]: Creating new listing
+2024-09-23T04:31:59.872Z [ERROR]: Error creating listing
+2024-09-23T04:44:14.313Z [INFO]: Creating new listing
+2024-09-23T04:44:14.319Z [ERROR]: Error creating listing
+2024-09-23T05:04:08.227Z [INFO]: Creating new listing
+2024-09-23T05:04:08.232Z [ERROR]: Error creating listing
+2024-09-23T05:16:39.071Z [INFO]: Creating new listing
+2024-09-23T05:16:39.082Z [ERROR]: Error creating listing
+2024-09-23T05:50:00.876Z [INFO]: Creating new listing
+2024-09-23T05:50:31.276Z [INFO]: Creating new listing
+2024-09-23T05:52:46.540Z [INFO]: Creating new listing
+2024-09-23T06:17:42.304Z [INFO]: Creating new listing
+2024-09-23T06:17:42.308Z [ERROR]: Error creating listing
+2024-09-23T06:19:43.651Z [INFO]: Creating new listing
+2024-09-23T06:20:56.384Z [INFO]: Creating new listing
+2024-09-23T06:21:40.116Z [INFO]: Creating new listing
+2024-09-23T06:21:40.132Z [ERROR]: Error creating listing
+2024-09-23T06:22:07.420Z [INFO]: Creating new listing
+2024-09-23T06:22:07.426Z [ERROR]: Error creating listing
+2024-09-23T06:23:06.614Z [INFO]: Creating new listing
+2024-09-23T06:23:06.620Z [ERROR]: Error creating listing
+2024-09-23T06:23:11.243Z [INFO]: Creating new listing
+2024-09-23T06:23:11.247Z [ERROR]: Error creating listing
+2024-09-23T06:35:35.053Z [INFO]: Creating new listing
+2024-09-23T06:35:35.081Z [WARN]: Validation error during listing creation
+2024-09-23T06:35:35.082Z [ERROR]: Error creating listing
+2024-09-23T07:11:45.203Z [ERROR]: Error creating listing
+2024-09-24T01:08:07.246Z [INFO]: Creating new listing
+2024-09-24T01:08:07.961Z [ERROR]: Error creating listing
+2024-09-24T01:16:21.654Z [ERROR]: Error creating listing
+2024-09-24T01:23:15.339Z [ERROR]: Error creating listing
+2024-09-24T02:19:52.193Z [ERROR]: Error creating listing
+2024-09-24T02:44:43.916Z [ERROR]: Error creating listing Unexpected token 'i', "i think is"... is not valid JSON

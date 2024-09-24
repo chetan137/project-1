@@ -1,28 +1,31 @@
 const express = require("express");
 const router = express.Router();
-const { listingSchema, reviewSchema } = require("../joi_Schema.js");
-const wrapAsync = require("../utils/wrapAsync.js");
-const ExpressError = require("../utils/ExpressError.js");
-const Listing = require("../models/listings.js");
-const flash = require("connect-flash");
-const multer = require("multer");
-const { storage } = require("../cloudCONFIG.js");
-const upload = multer({ storage });
-//const { isOwner, validateListing, isLoggedIn } = require("../middleware.js");
-const listingController = require("../controllers/listings.js");
+const listingController = require("../controllers/listings");
+const wrapAsync = require("../utils/wrapAsync");
+const { upload } = require("../cloudCONFIG"); // This handles both images and video
+const { isLoggedIn, validateListing } = require("../middleware");
 
-// Route for rendering the new listing form
+const app = express();
 
-router.route("/")
-    .get(wrapAsync(listingController.renderNewForm))
-    .post(
-        upload.fields([
-            { name: 'listing[images]', maxCount: 10 },  // Up to 10 images
-            { name: 'listing[video]', maxCount: 1 }     // A single video
-        ]),
-        wrapAsync(listingController.createListing)
-    );
+// Body parsing middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
+router.get("/", wrapAsync(listingController.renderNewForm));
+
+// Route to handle form submission with image and video uploads
+router.post("/",
+
+
+    upload.fields([
+        { name: 'listing[images]', maxCount: 30 }, // Array of images
+        { name: 'listing[video]', maxCount: 1 }     // Single video
+    ]),
+
+
+isLoggedIn,
+    wrapAsync(listingController.createListing) // Handle listing creation logic
+);
 
 
 module.exports = router;

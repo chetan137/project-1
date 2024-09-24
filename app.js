@@ -1,93 +1,73 @@
-if(process.env.NODE_ENV !="production"){
-  require("dotenv").config();
-
+// Load environment variables
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config(); // Only load dotenv in non-production environments
 }
-require('dotenv').config();
-
 const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const flash = require("connect-flash");
 const listingsRoutes = require("./routes/listings");
+const RouteUser = require("./routes/user.js");
 
-
-
-const app = express();
-const ejsMate = require("ejs-mate");
-const methodOverride =require("method-override");
-const bodyParser = require('body-parser');
+const path = require("path");
+const methodOverride = require("method-override");
 const passport = require("passport");
-const LocalStrategy =require("passport-local");
-const User = require("./models/user.js");
+const LocalStrategy = require("passport-local").Strategy;
+const User = require("./models/user"); // Ensure correct User model import
+const ejsMate = require("ejs-mate");
+const bodyParser = require('body-parser');
+const { upload } = require("./cloudCONFIG"); // This handles both images and video
 
-const path =require("path");
+// Initialize express app
+const app = express();
 
-module.exports = (fn) => {
-  return function (req, res, next) {
-    fn(req, res, next).catch(next);
-  };
-};
-
-
-
-
-
-// Middleware setup
+// Middleware for parsing request bodies
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // Parse JSON requests
+
+
+app.use(bodyParser.json());
+
+app.use(methodOverride("_method"));
+
+// Set EJS as the view engine and configure template engine
+app.engine("ejs", ejsMate);
+app.set("view engine", "ejs");
+
+app.set("views", path.join(__dirname, "views"));
+
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static('public'));
+
+// Session configuration
 app.use(session({
-    secret: 'your-secret-key', // Change this to a secure key
-    resave: false,
-    saveUninitialized: true,
+  secret: process.env.SECRET || 'your-secret-key', // Use environment variable for security
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  }
 }));
+
+// Flash messages middleware
 app.use(flash());
 
-// Setting up view engine and static files (if applicable)
-
-app.set('view engine', 'ejs');
-
-
-
-app.set("views",path.join(__dirname, "views"));
-app.use(express.urlencoded({extended :true}))
-app.use(methodOverride("_method"));
-app.engine('ejs',ejsMate);
-app.use(express.static(path.join(__dirname,"/public")))
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(express.static("public"));
-
-
-const sessionOptions = {
-
-  secret:process.env.SECRET,
-  resave: false,
-  saveUninitialized :false,
-  cookie:{
-    expires:Date.now()+7*24*60*60*1000,
-    maxAge:7*24*60*60*1000,
-    httpOnly:true,
-  },
-};
-
-
-
-app.use(session(sessionOptions));
-
-
+// Initialize Passport for authentication
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Passport Local Strategy setup
 passport.use(new LocalStrategy({
-  usernameField: 'email',
+  usernameField: 'email', // Use 'email' instead of 'username'
   passwordField: 'password'
 }, async (email, password, done) => {
   try {
     const user = await User.findOne({ email });
-
     if (!user) {
       return done(null, false, { message: 'Incorrect email or password.' });
     }
-
     user.authenticate(password, (err, user, options) => {
       if (err) {
         return done(err);
@@ -102,22 +82,7 @@ passport.use(new LocalStrategy({
   }
 }));
 
-
-
-
-
-
-
-
-
-passport.use(User.createStrategy());
-
-
-
-
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
+// Passport serialization and deserialization
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
@@ -131,31 +96,90 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-
+// Flash messages and current user in every template
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.user;
-  res.locals.User2 = req.body;
   next();
 });
 
 // Use the listings routes
 app.use("/listings", listingsRoutes);
+app.use("/",RouteUser);
+// MongoDB connection setup
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.error("MongoDB connection error:", err));
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("MongoDB connected"))
-    .catch(err => console.error("MongoDB connection error:", err));
+// Global error handling middleware (optional)
 
-// Error handling middleware (optional)
+
+// Error handling middleware
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send("Something broke!");
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: process.env.NODE_ENV === 'development' ? err : {}
+    });
 });
 
-// Start the server
-const PORT = process.env.PORT || 8081; // Change to 8081 or another available port
+
+app.all("*",(req,res,next)=>{
+  next(new ExpressError(404,"PageNot Found!"))
+})
+
+app.use( (err,req,res,next)=>{
+
+  let{statusCod =505,message="SomeThing went Wrong!"}=err;
+  res.status(statusCod).render("error.ejs",{message});
+
+});
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    if (err instanceof multer.MulterError) {
+        // Multer-specific errors
+        res.status(400).json({ error: 'Multer error: ' + err.message });
+    } else if (err.message === 'Invalid file type. Only PNG, JPG, JPEG, PDF, MP4, and MOV are allowed.') {
+        res.status(400).json({ error: err.message });
+    } else {
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+});
+app.use((err, req, res, next) => {
+    const { statusCode = 500, message = 'Something went wrong!' } = err;
+
+
+    if (statusCode === 400) {
+        return res.status(400).json({
+            status: 'error',
+            message: message || 'Bad Request',
+        });
+    }
+
+    // Default behavior for other errors
+    res.status(statusCode).json({
+        status: 'error',
+        message: message || 'Internal Server Error',
+    });
+});
+
+app.post('/upload', upload.single('file'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'Invalid file type or no file uploaded' });
+    }
+
+    // If upload successful, Cloudinary returns the URL in req.file.path
+    res.json({ message: 'File uploaded successfully', fileUrl: req.file.path });
+});
+console.log("Views Directory: ", app.get('views'));
+
+// Start the server on a defined port or 8081
+const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

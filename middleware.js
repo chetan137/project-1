@@ -1,61 +1,55 @@
 const Joi = require('joi');
-const ExpressError = require('../utils/ExpressError'); // Assuming you have a custom Express error handler
+const ExpressError = require('./utils/ExpressError');
+
+const User = require("./models/user");
+const {listingSchema,reviewSchema}=require("./joi_Schema.js");
 
 module.exports.validateListing = (req, res, next) => {
-    const listingSchema = Joi.object({
-        listing: Joi.object({
-            title: Joi.string().required().messages({
-                'string.empty': 'Title is required',
-            }),
-            description: Joi.string().optional(),
-            price: Joi.number().required().messages({
-                'number.base': 'Price must be a number',
-                'any.required': 'Price is required',
-            }),
-            location: Joi.string().required().messages({
-                'string.empty': 'Location is required',
-            }),
-            country: Joi.string().required().messages({
-                'string.empty': 'Country is required',
-            }),
+    const { error } = listingSchema.validate(req.body, { abortEarly: false }); // abortEarly: false allows collecting all errors
 
-
-            images: Joi.array().items(Joi.string()).optional(), // Expecting an array of image URLs
-            video: Joi.string().optional(), // URL for the video
-            keyFeatures: Joi.array().items(Joi.string()).optional(), // Array of key features
-            amenities: Joi.array().items(Joi.string()).optional(), // List of amenities
-            houseRules: Joi.object({
-                checkIn: Joi.string().required().messages({
-                    'string.empty': 'Check-in time is required',
-                }),
-                checkOut: Joi.string().required().messages({
-                    'string.empty': 'Check-out time is required',
-                }),
-                children: Joi.boolean().required(),
-                infants: Joi.boolean().required(),
-                pets: Joi.boolean().required(),
-                parties: Joi.boolean().required(),
-                smoking: Joi.boolean().required(),
-                additionalRules: Joi.array().items(Joi.string()).optional(), // List of additional rules
-            }).required(),
-            calendar: Joi.object({
-                availableDates: Joi.array().items(Joi.date()).required(), // Array of available dates
-            }).required(),
-            reviews: Joi.array().items(
-                Joi.object({
-                    user: Joi.string().required(), // User ID or username
-                    rating: Joi.number().min(1).max(5).required(),
-                    comment: Joi.string().optional(),
-                })
-            ).optional(), // Reviews section
-        }).required(),
-    });
-
-    const { error } = listingSchema.validate(req.body);
     if (error) {
-        const errMsg = error.details.map(el => el.message).join(',');
-        throw new ExpressError(errMsg, 400);
+        // Detailed error message joining all messages
+        const errMsg = error.details.map(el => el.message).join(', ');
+        next(new ExpressError(errMsg, 400));
+        console.log(errMsg); // Pass the error to the next middleware (error handler)
     } else {
         next();
     }
 };
+
+
+
+
+module.exports.isAdmin = (req, res, next) => {
+
+    if (req.isAuthenticated() && req.user.role === 'admin') {
+
+        return next();
+    } else {
+
+        req.flash("error", "You need to be an admin to access this page");
+        res.redirect("/login");
+    }
+};
+
+
+
+
+
+module.exports.isLoggedIn =(req,res,next)=>{
+
+
+    if(!req.isAuthenticated()){
+       req.session.redirectUrl =req.originalUrl;
+        req.flash("error","you must be Logged before use this page !!");
+        return res.redirect("/login");
+
+    }
+    next();
+};
+module.exports.saveRedirectUrl =(req,res,next)=>{
+    if(req.session.redirectUrl){
+        res.locals.redirectUrl =req.session.redirectUrl;
+    }
+    next();
+}

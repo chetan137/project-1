@@ -29,7 +29,7 @@
                         <label for="keyFeatures" class="form-label">Key Features</label>
                         <div id="keyFeaturesWrapper">
                             <div class="input-group mb-2">
-                                <input type="text" name="listing[keyFeatures][]" class="form-control"
+                                <input required type="text" name="listing[keyFeatures][]" class="form-control"
                                     placeholder="Key Feature">
                                 <button type="button" class="btn btn-success" onclick="addFeature()">+</button>
                             </div>
@@ -42,7 +42,7 @@
                         <label for="amenities" class="form-label">Amenities</label>
                         <div id="amenitiesWrapper">
                             <div class="input-group mb-2">
-                                <input type="text" name="listing[amenities][]" class="form-control"
+                                <input required type="text" name="listing[amenities][]" class="form-control"
                                     placeholder="Amenity">
                                 <button type="button" class="btn btn-success" onclick="addAmenity()">+</button>
                             </div>
@@ -54,18 +54,18 @@
                     <div class="mb-3">
                         <label for="houseRules" class="form-label">House Rules</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="listing[houseRules][children]"
-                                id="children" value="true">
+                            <input required class="form-check-input" type="checkbox"
+                                name="listing[houseRules][children]" id="children" value="true">
                             <label class="form-check-label" for="children">Allow Children</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="listing[houseRules][infants]"
+                            <input required class="form-check-input" type="checkbox" name="listing[houseRules][infants]"
                                 id="infants" value="true">
                             <label class="form-check-label" for="infants">Allow Infants</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="listing[houseRules][pets]" id="pets"
-                                value="true">
+                            <input required class="form-check-input" type="checkbox" name="listing[houseRules][pets]"
+                                id="pets" value="true">
                             <label class="form-check-label" for="pets">Allow Pets</label>
                         </div>
                         <div class="form-check">
@@ -98,8 +98,8 @@
                     <!-- Calendar for Availability -->
                     <div class="mb-3">
                         <label for="availableDates" class="form-label">Available Dates</label>
-                        <input required class="form-control" type="text" name="listing[availableDates]" id="availableDates"
-                            placeholder="Select available dates">
+                        <input required class="form-control" type="text" name="listing[availableDates]"
+                            id="availableDates" placeholder="Select available dates">
                         <div class="invalid-feedback">Please provide available dates.</div>
                     </div>
 
@@ -108,7 +108,7 @@
                         <label for="images" class="form-label">Upload Images</label>
                         <div id="imageUploadWrapper">
                             <div class="input-group mb-2">
-                                <input type="file" required class="form-control" name="listing[images]"
+                                <input type="file" required class="form-control" name="listing[images]" multiple
                                     accept="image/*">
                                 <button type="button" class="btn btn-success" onclick="addImage()">+</button>
                             </div>
@@ -174,18 +174,28 @@
             }
 
             // Initialize date picker
-                // Calendar (Date Picker) setup for available dates
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const dateInput = document.getElementById('availableDates');
-                        flatpickr(dateInput, {
-                            mode: 'range', // Allows selecting a range of dates
-                            dateFormat: 'Y-m-d',
-                            minDate: 'today'
-                        });
-                    });
-                </script>
+            // Calendar (Date Picker) setup for available dates
+            document.addEventListener('DOMContentLoaded', function () {
+                const dateInput = document.getElementById('availableDates');
+                flatpickr(dateInput, {
+                    mode: 'range', // Allows selecting a range of dates
+                    dateFormat: 'Y-m-d',
+                    minDate: 'today'
+                });
+            });
+        </script>
 
-    <!-- Flatpickr for the date picker -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <!-- Flatpickr for the date picker -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     </body>
+    <script>
+        document.querySelector('form').addEventListener('submit', function (event) {
+            console.log('Form Submitted');
+            event.preventDefault(); // Prevent default for debugging
+            const formData = new FormData(this);
+            console.log('Form Data:', Object.fromEntries(formData)); // Log the form data
+            // Optionally submit the form here using fetch or axios
+            this.submit(); // Uncomment to actually submit the form
+        });
+    </script>
