@@ -76,7 +76,7 @@ module.exports.createListing = async (req, res, next) => {
                 available: true // Set availability status (default to true)
             }));
         }
-        
+
         // Validate request body using Joi
         const { error, value } = listingSchema.validate(body.listing, { abortEarly: false });
         if (error) {
@@ -97,7 +97,8 @@ module.exports.createListing = async (req, res, next) => {
             location: {
                 lat: value.location.lat,
                 long: value.location.long
-            }
+            },
+            calendar: value.availableDates
         });
 
         // Save the new listing to the database
