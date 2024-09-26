@@ -4,11 +4,14 @@ const ExpressError = require('./utils/ExpressError');
 const User = require("./models/user");
 const {listingSchema,reviewSchema}=require("./joi_Schema.js");
 
+
+
 module.exports.validateListing = (req, res, next) => {
-    const { error } = listingSchema.validate(req.body, { abortEarly: false }); // abortEarly: false allows collecting all errors
+    const { error } = listingSchema.validate(req.body, { abortEarly: false });
+
 
     if (error) {
-        // Detailed error message joining all messages
+
         const errMsg = error.details.map(el => el.message).join(', ');
         next(new ExpressError(errMsg, 400));
         console.log(errMsg); // Pass the error to the next middleware (error handler)
@@ -16,7 +19,6 @@ module.exports.validateListing = (req, res, next) => {
         next();
     }
 };
-
 
 
 

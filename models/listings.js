@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+
+  const mongoose = require('mongoose');
 
 // Define schema for hotel listing
 const listingSchema = new mongoose.Schema({
@@ -60,8 +61,19 @@ const listingSchema = new mongoose.Schema({
       }
     }
   },
-  images: [String], // Array of image URLs
-  video: String, // Video URL
+  images: {
+    type: [String],
+    validate: [arrayLimit, 'Exceeds the limit of 10 images'],
+  },
+  video: {
+    type: String,
+    validate: {
+      validator: function(v) {
+        return v && v.match(/^https?:\/\/.+$/);
+      },
+      message: 'Invalid video URL'
+    }
+  }, // Video URL with validation
   calendar: [{
     date: {
       type: Date,
@@ -100,11 +112,28 @@ const listingSchema = new mongoose.Schema({
       required: true
     }
   },
+   geometry: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
+
+// Custom validator for image array length
+function arrayLimit(val) {
+  return val.length <= 10;
+
+}
 
 // Create the Listing model
 const Listing = mongoose.model('Listing', listingSchema);

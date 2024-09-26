@@ -21,10 +21,11 @@ const { upload } = require("./cloudCONFIG"); // This handles both images and vid
 // Initialize express app
 const app = express();
 
-// Middleware for parsing request bodies
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json()); // Parse JSON requests
 
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
 

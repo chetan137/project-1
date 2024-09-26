@@ -13,7 +13,7 @@ app.use(express.json());
 
 router.get("/", wrapAsync(listingController.renderNewForm));
 
-// Route to handle form submission with image and video uploads
+
 router.post("/",
 
 
@@ -22,9 +22,12 @@ router.post("/",
         { name: 'listing[video]', maxCount: 1 }     // Single video
     ]),
 
-
 isLoggedIn,
-    wrapAsync(listingController.createListing) // Handle listing creation logic
+
+
+
+    wrapAsync(listingController.createListing)
+
 );
 
 
