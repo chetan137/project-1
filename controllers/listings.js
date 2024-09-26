@@ -45,27 +45,39 @@ module.exports.createListing = async (req, res, next) => {
         console.log("Parsed body:", body);
 
         // Modify data types before validation if needed
- const { houseRules, location } = body.listing;        if (houseRules && typeof houseRules.additionalRules === 'string') {
+        const { houseRules, location,availableDates } = body.listing;
+        if (houseRules && typeof houseRules.additionalRules === 'string') {
             houseRules.additionalRules = { rule: houseRules.additionalRules };  // Convert to object
         }
 
-
-
-           const coordinatesResponse = await fetchGeocodingData(location);
+          const coordinatesResponse = await fetchGeocodingData(location);
 
 
         if (!coordinatesResponse.body.features.length) {
             throw new ExpressError('Invalid location', 401);
         }
-const geometry = coordinatesResponse.body.features[0].geometry.coordinates;
+         const coordinates = coordinatesResponse.body.features[0].geometry.coordinates;
+        if (typeof body.listing.location === 'string') {
+       body.listing.location = {
+        lat: coordinates[1],   // Latitude is the second element in the GeoJSON coordinates array
+         long: coordinates[0]   // Longitude is the first element in the GeoJSON coordinates array
+    };
+}
 
-console.log("Coordinates of the location:", geometry); //
-        // Handle availableDates as array of Date objects
-        if (typeof body.listing.availableDates === 'string') {
-            body.listing.availableDates = [new Date(body.listing.availableDates)];
+         if (typeof availableDates === 'string') {
+            const dateArray = availableDates.split(',').map(dateStr => dateStr.trim());
+            body.listing.availableDates = dateArray.map(dateStr => ({
+                date: new Date(dateStr), // Convert to Date object
+                available: true // Set availability status (default to true)
+            }));
+        } else if (Array.isArray(availableDates)) {
+            body.listing.availableDates = availableDates.map(date => ({
+                date: new Date(date), // Ensure date is a Date object
+                available: true // Set availability status (default to true)
+            }));
         }
-
-
+        
+        // Validate request body using Joi
         const { error, value } = listingSchema.validate(body.listing, { abortEarly: false });
         if (error) {
             return next(new ExpressError(error.details.map(detail => detail.message).join(', '), 400));
@@ -82,8 +94,10 @@ console.log("Coordinates of the location:", geometry); //
             owner: req.user._id,  // Associate listing with user
             images,  // Array of image URLs
             video,   // Video URL
-
-            geometry,
+            location: {
+                lat: value.location.lat,
+                long: value.location.long
+            }
         });
 
         // Save the new listing to the database

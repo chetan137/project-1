@@ -96,13 +96,18 @@
                     </div>
 
                     <!-- Calendar for Availability -->
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label for="availableDates" class="form-label">Available Dates</label>
                         <input required class="form-control" type="text" name="listing[availableDates]"
                             id="availableDates" placeholder="Select available dates">
                         <div class="invalid-feedback">Please provide available dates.</div>
+                    </div> -->
+                    <div class="mb-3">
+                        <label for="availableDates" class="form-label">Available Dates (comma-separated)</label>
+                        <input required class="form-control" type="text" name="listing[availableDates]"
+                            id="availableDates" placeholder="YYYY-MM-DD, YYYY-MM-DD">
+                        <div class="invalid-feedback">Please provide valid available dates.</div>
                     </div>
-
                     <!-- Images Upload (add one by one) -->
                     <div class="mb-3">
                         <label for="images" class="form-label">Upload Images</label>
@@ -178,11 +183,17 @@
             document.addEventListener('DOMContentLoaded', function () {
                 const dateInput = document.getElementById('availableDates');
                 flatpickr(dateInput, {
-                    mode: 'range', // Allows selecting a range of dates
+                    mode: 'multiple', // Allows selecting multiple dates
                     dateFormat: 'Y-m-d',
-                    minDate: 'today'
+                    minDate: 'today',
+                    onClose: function (selectedDates) {
+                        // Ensure the dates are in the correct format
+                        const formattedDates = selectedDates.map(date => date.toISOString().split('T')[0]);
+                        dateInput.value = formattedDates.join(', '); // Store selected dates as a comma-separated string
+                    }
                 });
             });
+
         </script>
 
         <!-- Flatpickr for the date picker -->

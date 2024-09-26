@@ -1,5 +1,5 @@
 
-  const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 // Define schema for hotel listing
 const listingSchema = new mongoose.Schema({
@@ -64,7 +64,7 @@ const listingSchema = new mongoose.Schema({
   images: {
     type: [String],
     validate: [arrayLimit, 'Exceeds the limit of 10 images'],
-  },
+  }, // Array of image URLs with a limit of 10
   video: {
     type: String,
     validate: {
@@ -112,17 +112,6 @@ const listingSchema = new mongoose.Schema({
       required: true
     }
   },
-   geometry: {
-        type: {
-            type: String,
-            enum: ['Point'],
-            required: true
-        },
-        coordinates: {
-            type: [Number],
-            required: true
-        }
-    },
   createdAt: {
     type: Date,
     default: Date.now
@@ -131,11 +120,8 @@ const listingSchema = new mongoose.Schema({
 
 // Custom validator for image array length
 function arrayLimit(val) {
-  return val.length <= 10;
-
+  return val.length <= 10; // Limit image array to 10 URLs
 }
 
 // Create the Listing model
-const Listing = mongoose.model('Listing', listingSchema);
-
-module.exports = Listing;
+module.exports = mongoose.model('Listing', listingSchema);;
