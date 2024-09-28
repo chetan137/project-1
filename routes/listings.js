@@ -29,6 +29,6 @@ isLoggedIn,
     wrapAsync(listingController.createListing)
 
 );
-
+router.route("/:id").delete(isLoggedIn,wrapAsync(listingController.deleteListings));
 
 module.exports = router;

@@ -111,3 +111,10 @@ module.exports.createListing = async (req, res, next) => {
         next(err);  // Forward the error to error-handling middleware
     }
 };
+module.exports.deleteListings=async(req,res)=>{
+  let {id} = req.params;
+  let deletelist =  await Listing.findByIdAndDelete(id);
+  console.log(deletelist);
+  req.flash("error","you just DELETE listing!!");
+  res.redirect("/listings");
+};
